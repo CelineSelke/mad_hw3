@@ -32,16 +32,21 @@ class GameState extends ChangeNotifier {
   }
 
   void flip(int index){
-    if (gameOver || cards[index].isFaceUp){
+    if (gameOver){
       return;
     }
-
-    cards[index].isFaceUp = true;
-    if(cardIndex1 == -1){
-      cardIndex1 = index;
+    if(cards[index].isFaceUp == true){
+      cards[index].isFaceUp = false;
     }
-    else{
-      cardIndex2 = index;
+    if(cards[index].isFaceUp == false){
+      cards[index].isFaceUp = true;
+      if(cardIndex1 == -1){
+        cardIndex1 = index;
+      }
+      else{
+        cardIndex2 = index;
+        checkMatch();
+      }
     }
     notifyListeners();
 
@@ -50,10 +55,10 @@ class GameState extends ChangeNotifier {
   bool checkGameOver(){
     for(Card card in cards){
       if(card.isFaceUp){
-        return true;
+        return false;
       }
+      return true;
     }
-
     return false;
 
   }
@@ -63,14 +68,14 @@ class GameState extends ChangeNotifier {
       cardIndex1 = -1;
       cardIndex2 = -1;
 
-      if (checkGameOver()) {
+      if (gameOver) {
         gameOver = true;
         notifyListeners();
       }
     }
     else{
-      cards[cardIndex1].isFaceUp = false;
-      cards[cardIndex2].isFaceUp = false;
+      flip(cardIndex1);
+      flip(cardIndex2);
       cardIndex1 = -1;
       cardIndex2 = -1;
       notifyListeners();
@@ -78,6 +83,37 @@ class GameState extends ChangeNotifier {
   }
   
 }
+
+class CardBlock extends StatelessWidget{
+  final int index;
+
+  CardBlock({required this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    final card = context.watch<GameState>().cards[index]; 
+
+    return GestureDetector(
+      onTap: () => context.read<GameState>().flip(index),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: card.isFaceUp ? Colors.blue : Colors.grey,
+        ),
+        child: Center(
+          child: card.isFaceUp
+              ? Text(
+                  '${card.index}',
+                  style: TextStyle(fontSize: 24, color: Colors.white),
+                )
+              : Icon(Icons.help_outline, color: Colors.white),
+        ),
+      ),
+    );
+  }
+}
+
 
 
 class MyApp extends StatelessWidget {
