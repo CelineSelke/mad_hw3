@@ -54,33 +54,37 @@ class GameState extends ChangeNotifier {
 
   bool checkGameOver(){
     for(Card card in cards){
-      if(card.isFaceUp){
+      if(card.isFaceUp == false){
         return false;
       }
-      return true;
+
     }
-    return false;
+    return true;
 
   }
 
-  void checkMatch() async{
-    if (cards[cardIndex1].index == cards[cardIndex2].index) {
-      cardIndex1 = -1;
-      cardIndex2 = -1;
-
-      if (gameOver) {
-        gameOver = true;
-        notifyListeners();
-      }
+void checkMatch() async {
+  if (cards[cardIndex1].index == cards[cardIndex2].index) {
+    cardIndex1 = -1;
+    cardIndex2 = -1;
+    if (checkGameOver()) {
+      gameOver = true;
+      notifyListeners();
     }
-    else{
-      flip(cardIndex1);
-      flip(cardIndex2);
+  } 
+  else {
+    await Future.delayed(Duration(seconds: 1), () {
+      cards[cardIndex1].isFaceUp = false;
+      cards[cardIndex2].isFaceUp = false;
       cardIndex1 = -1;
       cardIndex2 = -1;
       notifyListeners();
-    }
+    });
   }
+
+  notifyListeners();
+}
+
   
 }
 
@@ -99,13 +103,13 @@ class CardBlock extends StatelessWidget{
         duration: Duration(milliseconds: 300),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: card.isFaceUp ? Colors.blue : Colors.grey,
+          color: card.isFaceUp ? Colors.white : Colors.red,
         ),
         child: Center(
           child: card.isFaceUp
               ? Text(
                   '${card.index}',
-                  style: TextStyle(fontSize: 24, color: Colors.white),
+                  style: TextStyle(fontSize: 24, color: Colors.black),
                 )
               : Icon(Icons.help_outline, color: Colors.white),
         ),
