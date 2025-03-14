@@ -53,7 +53,7 @@ class GameState extends ChangeNotifier {
         return true;
       }
     }
-    
+
     return false;
 
   }
@@ -71,26 +71,27 @@ class GameState extends ChangeNotifier {
     else{
       cards[cardIndex1].isFaceUp = false;
       cards[cardIndex2].isFaceUp = false;
-
-
-
+      cardIndex1 = -1;
+      cardIndex2 = -1;
+      notifyListeners();
     }
   }
   
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Card Matching Game',
-      theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return ChangeNotifierProvider(
+      create: (_) => GameState(),
+      child: MaterialApp(
+        title: 'Card Matching Game Game',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: MyHomePage(title: "Card Matching Game",),
       ),
-      home: const MyHomePage(title: 'Card Matching Game'),
     );
   }
 }
@@ -110,6 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
 
     return Scaffold(
       appBar: AppBar(
@@ -118,21 +120,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
         title: Text(widget.title),
       ),
-      body: Center(
-
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(''),
-            
+          children: [
+            if (gameState.gameOver) Padding(padding: const EdgeInsets.all(16.0), child: Text('You Won!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, ),),),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4, 
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemCount: gameState.cards.length,
+                itemBuilder: (context, index) {
+                  return CardBlock(index: index);
+                },
+              ),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: ,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), 
     );
   }
 }
