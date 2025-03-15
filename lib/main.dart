@@ -155,15 +155,15 @@ class CardBlock extends StatelessWidget{
     return GestureDetector(
       onTap: () => context.read<GameState>().flip(index),
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: Duration(seconds: 1),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: card.isFaceUp ? Colors.white : Colors.red,
+          color: Colors.white,
         ),
         child: Center(
           child: card.isFaceUp
               ? Image.asset(gameState.getImagePath(index), fit: BoxFit.cover)
-              : Icon(Icons.help_outline, color: Colors.white),
+              : Image.asset("assets/images/back.jpg", fit: BoxFit.cover,),
         ),
       ),
     );
