@@ -93,6 +93,39 @@ class CardBlock extends StatelessWidget{
 
   CardBlock({required this.index});
 
+  String getImage(int index){
+    String file = "";
+    if(index == 0){
+      file = "king_of_hearts.png";
+    }
+    if(index == 1){
+      file = "ace_of_hearts.png";
+    }
+    if(index == 2){
+      file = "2_of_hearts.png";
+    }
+    if(index == 3){
+      file = "3_of_hearts.png";
+    }
+    if(index == 4){
+      file = "4_of_hearts.png";
+    }
+    if(index == 5){
+      file = "5_of_hearts.png";
+    }
+    if(index == 6){
+      file = "6_of_hearts.png";
+    }
+    if(index == 7){
+      file = "7_of_hearts.png";
+    }
+    if(index == 8){
+      file = "5_of_hearts.png";
+    }
+
+    return "assets/images/$file";
+  }
+
   @override
   Widget build(BuildContext context) {
     final card = context.watch<GameState>().cards[index]; 
@@ -107,10 +140,7 @@ class CardBlock extends StatelessWidget{
         ),
         child: Center(
           child: card.isFaceUp
-              ? Text(
-                  '${card.index}',
-                  style: TextStyle(fontSize: 24, color: Colors.black),
-                )
+              ? Image.asset(getImage(index), fit: BoxFit.cover)
               : Icon(Icons.help_outline, color: Colors.white),
         ),
       ),
