@@ -30,7 +30,7 @@ class GameState extends ChangeNotifier {
     String file = "";
 
     if(cards[index].index == 0){
-      file = "king_of_hearts.png";
+      file = "king_of_hearts2.png";
     }
     if(cards[index].index == 1){
       file = "ace_of_hearts.png";
@@ -97,27 +97,38 @@ class GameState extends ChangeNotifier {
 
   }
 
-void checkMatch() async {
-  if (cards[cardIndex1].index == cards[cardIndex2].index) {
-    cardIndex1 = -1;
-    cardIndex2 = -1;
-    if (checkGameOver()) {
-      gameOver = true;
-      notifyListeners();
+  void checkMatch() async {
+    if (cards[cardIndex1].index == cards[cardIndex2].index) {
+      cardIndex1 = -1;
+      cardIndex2 = -1;
+      if (checkGameOver()) {
+        gameOver = true;
+        notifyListeners();
+      }
+    } 
+    else {
+      await Future.delayed(Duration(seconds: 1), () {
+        cards[cardIndex1].isFaceUp = false;
+        cards[cardIndex2].isFaceUp = false;
+        cardIndex1 = -1;
+        cardIndex2 = -1;
+        notifyListeners();
+      });
     }
-  } 
-  else {
-    await Future.delayed(Duration(seconds: 1), () {
-      cards[cardIndex1].isFaceUp = false;
-      cards[cardIndex2].isFaceUp = false;
+
+    notifyListeners();
+  }
+
+  void reset(){
+    for(Card card in cards){
+      card.isFaceUp = false;
+      cards.shuffle();
+      gameOver = false;
       cardIndex1 = -1;
       cardIndex2 = -1;
       notifyListeners();
-    });
+    }
   }
-
-  notifyListeners();
-}
 
   
 }
@@ -210,6 +221,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
+            ElevatedButton(
+              onPressed: gameState.reset, 
+              child: Row(mainAxisAlignment:MainAxisAlignment.center, children: [
+                Icon(Icons.refresh_outlined, size: 40,),
+                Text("Reset", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40),)]
+              )
+            )
           ],
         ),
       ),
