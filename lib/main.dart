@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
+import 'dart:math';
 
 void main() {
   runApp(MyApp());
@@ -15,46 +16,52 @@ class Card {
 
 class GameState extends ChangeNotifier {
   late List<Card> cards;
+  List<String> suits = ["hearts","diamonds","spades","clubs"];
   bool gameOver = false;
   int cardIndex1 = -1;
   int cardIndex2 = -1;
+  int randValue = Random().nextInt(4); 
+  String suit = "";
+
+
 
   GameState() {
     cards = List.generate(16, (index) {
       return Card(index: index % 8); 
     });
     shuffle();
+    suit = suits[randValue];
   }
 
-    String getImagePath(int index){
+  String getImagePath(int index){
     String file = "";
 
     if(cards[index].index == 0){
-      file = "king_of_hearts2.png";
+      file = "king_of_${suit}2.png";
     }
     if(cards[index].index == 1){
-      file = "ace_of_hearts.png";
+      file = "ace_of_$suit.png";
     }
     if(cards[index].index == 2){
-      file = "2_of_hearts.png";
+      file = "2_of_$suit.png";
     }
     if(cards[index].index == 3){
-      file = "3_of_hearts.png";
+      file = "3_of_$suit.png";
     }
     if(cards[index].index == 4){
-      file = "4_of_hearts.png";
+      file = "4_of_$suit.png";
     }
     if(cards[index].index == 5){
-      file = "5_of_hearts.png";
+      file = "5_of_$suit.png";
     }
     if(cards[index].index == 6){
-      file = "6_of_hearts.png";
+      file = "6_of_$suit.png";
     }
     if(cards[index].index == 7){
-      file = "7_of_hearts.png";
+      file = "7_of_$suit.png";
     }
     if(cards[index].index == 8){
-      file = "5_of_hearts.png";
+      file = "5_of_$suit.png";
     }
 
     return "assets/images/$file";
@@ -122,12 +129,14 @@ class GameState extends ChangeNotifier {
   void reset(){
     for(Card card in cards){
       card.isFaceUp = false;
+    }
       cards.shuffle();
       gameOver = false;
       cardIndex1 = -1;
       cardIndex2 = -1;
       notifyListeners();
-    }
+      randValue = Random().nextInt(4);
+      suit = suits[randValue];
   }
 
   
