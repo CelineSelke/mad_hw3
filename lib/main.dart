@@ -26,6 +26,40 @@ class GameState extends ChangeNotifier {
     shuffle();
   }
 
+    String getImagePath(int index){
+    String file = "";
+
+    if(cards[index].index == 0){
+      file = "king_of_hearts.png";
+    }
+    if(cards[index].index == 1){
+      file = "ace_of_hearts.png";
+    }
+    if(cards[index].index == 2){
+      file = "2_of_hearts.png";
+    }
+    if(cards[index].index == 3){
+      file = "3_of_hearts.png";
+    }
+    if(cards[index].index == 4){
+      file = "4_of_hearts.png";
+    }
+    if(cards[index].index == 5){
+      file = "5_of_hearts.png";
+    }
+    if(cards[index].index == 6){
+      file = "6_of_hearts.png";
+    }
+    if(cards[index].index == 7){
+      file = "7_of_hearts.png";
+    }
+    if(cards[index].index == 8){
+      file = "5_of_hearts.png";
+    }
+
+    return "assets/images/$file";
+  }
+
   void shuffle() {
     cards.shuffle();
     notifyListeners();
@@ -93,42 +127,10 @@ class CardBlock extends StatelessWidget{
 
   CardBlock({required this.index});
 
-  String getImage(int index){
-    String file = "";
-    if(index == 0){
-      file = "king_of_hearts.png";
-    }
-    if(index == 1){
-      file = "ace_of_hearts.png";
-    }
-    if(index == 2){
-      file = "2_of_hearts.png";
-    }
-    if(index == 3){
-      file = "3_of_hearts.png";
-    }
-    if(index == 4){
-      file = "4_of_hearts.png";
-    }
-    if(index == 5){
-      file = "5_of_hearts.png";
-    }
-    if(index == 6){
-      file = "6_of_hearts.png";
-    }
-    if(index == 7){
-      file = "7_of_hearts.png";
-    }
-    if(index == 8){
-      file = "5_of_hearts.png";
-    }
-
-    return "assets/images/$file";
-  }
-
   @override
   Widget build(BuildContext context) {
     final card = context.watch<GameState>().cards[index]; 
+    final gameState = context.watch<GameState>();
 
     return GestureDetector(
       onTap: () => context.read<GameState>().flip(index),
@@ -140,7 +142,7 @@ class CardBlock extends StatelessWidget{
         ),
         child: Center(
           child: card.isFaceUp
-              ? Image.asset(getImage(index), fit: BoxFit.cover)
+              ? Image.asset(gameState.getImagePath(index), fit: BoxFit.cover)
               : Icon(Icons.help_outline, color: Colors.white),
         ),
       ),
@@ -158,7 +160,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Card Matching Game Game',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.blue, scaffoldBackgroundColor: Colors.white
         ),
         home: MyHomePage(title: "Card Matching Game",),
       ),
